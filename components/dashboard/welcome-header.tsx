@@ -32,10 +32,10 @@ export function WelcomeHeader({ tasksCount, meetingsCount = 0 }: WelcomeHeaderPr
   return (
     <div className="flex items-center justify-between animate-fade-in">
       <div>
-        <h1 className="text-xl font-semibold text-text-primary mb-1">
+        <h1 className="text-lg sm:text-xl font-semibold text-text-primary mb-1">
           {getGreeting()}
         </h1>
-        <p className="text-sm text-text-secondary">
+        <p className="text-xs sm:text-sm text-text-secondary">
           {getItemsText()}
         </p>
       </div>

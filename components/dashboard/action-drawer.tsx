@@ -143,13 +143,13 @@ export function ActionDrawer({
       <div
         ref={drawerRef}
         className={cn(
-          "fixed top-0 right-0 z-50 h-full w-full max-w-lg bg-bg-panel border-l border-border-subtle",
+          "fixed top-0 right-0 z-50 h-full w-full sm:max-w-lg bg-bg-panel border-l border-border-subtle",
           "transform transition-transform duration-300 ease-out",
           isOpen ? "translate-x-0" : "translate-x-full"
         )}
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-border-subtle">
+        <div className="flex items-center justify-between p-4 sm:p-6 border-b border-border-subtle">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-accent-blue/10 flex items-center justify-center">
               <Mail className="w-5 h-5 text-accent-blue" />
@@ -174,10 +174,10 @@ export function ActionDrawer({
         </div>
 
         {/* Content */}
-        <div className="p-6 space-y-4 overflow-y-auto h-[calc(100%-140px)]">
+        <div className="p-4 sm:p-6 space-y-4 overflow-y-auto h-[calc(100%-130px)] sm:h-[calc(100%-140px)]">
           {/* Email subject */}
           <div className="pb-4 border-b border-border-subtle">
-            <h3 className="text-base font-medium text-text-primary mb-2">
+            <h3 className="text-sm sm:text-base font-medium text-text-primary mb-2 line-clamp-2">
               {task.title}
             </h3>
             <div className="flex items-center gap-2 flex-wrap">
@@ -214,9 +214,9 @@ export function ActionDrawer({
                     )}
                   >
                     {/* Message header */}
-                    <div className="flex items-start gap-3 mb-3">
+                    <div className="flex items-start gap-2 sm:gap-3 mb-3">
                       <div className={cn(
-                        "w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-medium flex-shrink-0",
+                        "w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-white text-xs sm:text-sm font-medium flex-shrink-0",
                         getAvatarColor(message.from.name)
                       )}>
                         {getInitials(message.from.name)}
@@ -262,7 +262,7 @@ export function ActionDrawer({
         </div>
 
         {/* Actions */}
-        <div className="absolute bottom-0 left-0 right-0 p-6 border-t border-border-subtle bg-bg-panel">
+        <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6 border-t border-border-subtle bg-bg-panel safe-area-inset-bottom">
           <div className="flex items-center gap-3">
             {gmailUrl && (
               <a
