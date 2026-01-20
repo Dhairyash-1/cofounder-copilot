@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { 
   Sparkles, Mail, Calendar, ArrowRight, Check, 
@@ -55,18 +55,51 @@ export default function OnboardingPage() {
   const [completedSteps, setCompletedSteps] = useState<number[]>([]);
   const [isScanning, setIsScanning] = useState(false);
   const [scanProgress, setScanProgress] = useState(0);
+  const [isCheckingOnboarding, setIsCheckingOnboarding] = useState(true);
 
   const currentStepData = steps[currentStep];
   const IconComponent = currentStepData.icon;
   const isLastStep = currentStep === steps.length - 1;
 
+  // Check if user has already completed onboarding
+  useEffect(() => {
+    async function checkOnboarding() {
+      try {
+        const res = await fetch("/api/user");
+        if (res.ok) {
+          const data = await res.json();
+          if (data.user?.hasCompletedOnboarding) {
+            router.replace("/dashboard");
+            return;
+          }
+        }
+      } catch (error) {
+        console.error("Failed to check onboarding status:", error);
+      }
+      setIsCheckingOnboarding(false);
+    }
+    checkOnboarding();
+  }, [router]);
+
   // Initial enter animation
-  useState(() => {
-    setTimeout(() => setIsEntering(false), 100);
-  });
+  useEffect(() => {
+    if (!isCheckingOnboarding) {
+      setTimeout(() => setIsEntering(false), 100);
+    }
+  }, [isCheckingOnboarding]);
 
   const handleNext = async () => {
     if (isLastStep) {
+      // Mark onboarding as complete
+      try {
+        await fetch("/api/user", {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ hasCompletedOnboarding: true }),
+        });
+      } catch (error) {
+        console.error("Failed to update onboarding status:", error);
+      }
       router.push("/dashboard");
       return;
     }
@@ -116,6 +149,20 @@ export default function OnboardingPage() {
     setIsEntering(false);
     setIsExiting(false);
   };
+
+  // Show loading state while checking onboarding status
+  if (isCheckingOnboarding) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-bg-main">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-10 h-10 rounded-xl bg-accent-blue/20 flex items-center justify-center animate-pulse">
+            <Sparkles className="w-5 h-5 text-accent-blue" />
+          </div>
+          <div className="w-6 h-6 border-2 border-accent-blue/30 border-t-accent-blue rounded-full animate-spin" />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex flex-col bg-bg-main overflow-hidden">
